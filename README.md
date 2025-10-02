@@ -1,85 +1,206 @@
-# Python 課題テンプレート
+# 課題リポジトリの使い方（GitHub Codespaces 版）
 
-本リポジトリは、Github Classroom で配布する Python 用課題テンプレートリポジトリを作成するためのテンプレートです。
-
-## 教員向け: GitHub Classroom 課題作成手順
-
-### 1. 課題テンプレートリポジトリの作成
-1. GitHub 上の本リポジトリから Use this template > Create a new repository を選択
-2. Repository name に課題名、Description にリポジトリの説明を記述
-3. visibility で Private が選択されていることを確認し、Create repository を選択
-4. 作成したリポジトリの Settings > General から Template repository に✅を入れる
-
-### 2. 課題作成
-1. `src/kadai/` に Python プログラムの雛形を配置
-2. `tests/stages/` に段階的なテストを配置
-3. `pytest.ini` の `markers` にテストに合わせたマーカーを定義
-4. `.github/workflows/classroom.yml` にステージ毎のテストを設定
-5. README の [課題内容](#課題内容) を記述し、課題作成手順を削除
-
-### 3. 課題割り当て
-1. [Github Classroom](https://classroom.github.com/classrooms) のクラスから + New assignment を選択
-2. Assignment title, Deadline をそれぞれ設定し、Individual assignmenet が選択されていることを確認して Continue
-3. Find a Github repository から [2.課題作成](#2-課題作成) で作成したリポジトリを検索して選択
-4. visibility が Private、Copy the default branch only にのみ✅が付いていることを確認
-5. Add a supported editor で Github Codespaces を選択して Continue
-6. Add autograding tests に表示される YAML にテストが設定されていることを確認し Create assignment
-
-### 4. 課題を開く
-1. 課題の Copy invite link を生徒に共有
-2. 招待を Accept 後、Open in Github Codespaces ボタンから課題実施
+> [!NOTE]
+> この文書は、**GitHub Classroom** で配布された課題を **GitHub Codespaces** 上で進め、**テストを通して提出するまで**の手順をまとめたガイドです。
 
 ---
 
-## 課題内容
+## この課題で学ぶこと（目的・到達目標）
+- **小さく実装 → テストで確かめる → 通ったら記録（コミット）** という基本サイクルを体験する。
+- 自分の変更が **テストで確認できる** ことを知る。
+- **提出（変更を同期）** までの一連の流れを身につける。
 
-<!-- ここに具体的な課題内容を記載してください -->
+> [!WARNING]
+> **「変更を同期」＝提出** です。練習段階では押さないでください。提出は最終チェックリストを満たしてから行います。
 
-**例: 四則演算関数の実装**
+---
 
-`src/kadai/` 内に以下の関数を実装してください：
-1. `add_one(x)`: 引数に1を加算する関数
-2. その他、段階的に要求される関数
+## 前提と準備
+1. **招待リンク** から課題を受け取る。
+2. 右上の **Code → Create codespace on main** を選び、Codespaces を起動。
+3. 画面左の **サイドバー → エクスプローラー（ファイル）** と **ソース管理** を確認。
 
-## 実行方法
+---
 
-### 段階別テスト実行
-```bash
-# 初回のみ実行が必要
-chmod +x ./scripts/test
+## 課題の全体像（提出までの7ステップ）
+1. 招待リンクから課題を受け取る
+2. Codespaces で開く
+3. **README を読む（この文書）**
+4. `src/kadai` 配下の課題ファイルに**実装**する
+5. **テスト**を実行して確認する（`./scripts/test N` または `pytest`）
+6. **コミット**（変更を記録）して、次の段階へ進む
+7. **提出**（サイドバー → ソース管理 → **変更を同期**）
+
+> [!TIP]
+> 基本は「**実装 → テスト → コミット**」の繰り返しです。提出は最後に 1 回だけ実施してください！
+
+---
+
+## チュートリアル：やってみよう（ステージ1〜3）
+プログラムを小さく作ってテストを通し、コミットする一連の流れを体験します。
+> 課題: **挨拶をするプログラムを作ろう**
+
+### なぜやるの？
+- **小さく進める** と、どこで失敗したかが分かります。
+- テストを使うと、**プログラムの正しさを確認** できます。
+- 提出前に動作確認ができ、**提出後の自動採点** の結果を事前に知ることができます。
+
+---
+
+### **ステージ1**
+1. `src/kadai/hello.py` に **`Hello, World!` を返す関数 `hello_world()`** を定義します。
+2. ターミナルで **`./scripts/test 1`** を実行し、ステージ1のテストだけを走らせます。
+   ```bash
+   ./scripts/test 1
+   ```
+3. **`pytest`** を実行して、**ステージ1のみ成功**していることを確認します。
+   ```bash
+   pytest
+   ```
+4. **ソース管理 → 変更**にカーソル → **すべての変更をステージ** → **コミットメッセージを記入**（例：`hello_world を実装`）→ **コミット**。
+
+> [!WARNING]
+> まだ **変更を同期** は押さないでください（提出になってしまいます）。
+
+---
+
+### **ステージ2**
+1. `tests/stages/stage-02/test_hello_person.py` を読んで、次に必要な実装を把握します。
+
+    ```python
+    assert hello_person() == "Hello, World!"
+    ```
+
+> [!NOTE]
+> `assert <式>` は、式が `True` であるかどうかをチェックするデバッグ用の命令です。  
+> ここでは、`hello_person()` の戻り値と `"Hello, World!"` という値が同一のとき、このテストを通すことができます。
+
+2. `src/kadai/hello.py` に **`hello_person()`** を追加し、まずは **`Hello, World!` を返す**ようにしてテストを実行します。
+   ```bash
+   ./scripts/test 2
+   ```
+3. 失敗したら、`src/kadai/__init__.py` に関数のエクスポートを追加して再テストします。
+   ```python
+   from .hello import hello_world, hello_person
+   ```
+4. `pytest` で **ステージ1〜2のみ成功**を確認し、メッセージ（例：`hello_person を追加`）で**コミット**。
+
+> [!WARNING]
+> **ステージ1 のテストに失敗** していませんか？  
+> もしかすると、ステージ2 の実装のために不要な部分を変更してしまったかもしれません。  
+> 課題では、常に前段階のテストに合格したまま次のテストに合格するように実装を進めていきます。
+
+---
+
+### **ステージ3**
+1. `tests/stages/stage-03/test_returns_name.py` を読んで、**`hello_person(name)` が `Hello, <name>!` を返す**仕様に変更します。
+2. テストを実行：
+   ```bash
+   ./scripts/test 3
+   ```
+3. `pytest` で **すべてのテスト成功**を確認します。もし過去ステージが失敗したら、変更前に戻してやり直します（手順は下記「困ったとき」参照）。
+
+---
+
+## 提出
+### 提出手順
+1. **ソース管理 → 変更 → すべての変更をステージ**
+2. **コミットメッセージを入力 → コミット**
+3. **変更を同期**（＝提出）
+
+> [!WARNING]
+> コミットメッセージが空だとエラーになります。  
+> 短く**日本語で内容が分かる**文にしましょう（例：`hello_person を引数対応に変更`）。  
+> メッセージボックス内のボタンで模範的なコミットメッセージをAI生成することも出来ます。
+
+### 提出チェックリスト
+- [　] `./scripts/test N` と `pytest` で想定のテストが通っている
+- [　] テストに通すごとに、変更点をまとめたコミットメッセージと共に変更をコミットしている
+- [　] ★/〇 の設定ファイルは**編集していない**
+- [　] 最後に **変更を同期** を実行した
+
+---
+
+## ディレクトリ構成と重要ファイル
 ```
-
-```bash
-# Stage 1 のテストのみ実行
-./scripts/test 1
-
-# Stage 2 のテストのみ実行  
-./scripts/test 2
+(課題リポジトリ名)
+├── .gitignore
+├── pyproject.toml
+├── pytest.ini 〇
+├── README.md ★
+├── requirements-dev.txt
+├── requirements.txt
+├── AGENTS.md
+├── .devcontainer
+│   └── devcontainer.json
+├── .vscode
+│   └── setting.json
+├── .github
+│   └── workflows
+│       └── classroom.yml
+├── scripts
+│   └── test ★
+├── src
+│   └── kadai
+│       └── (演習用Pythonファイル) ★
+└── tests
+    └── stages
+        └── stage-XX
+            └── (ステージXXのテストファイル) ★
 ```
+> [!CAUTION]
+> **★ / 〇 は重要**です。自動採点や環境設定に関わるため、指定がない限り編集しません。
 
-### 全ステージ一括テスト実行
-```bash
-pytest
-```
+### ★ 特に重要なファイル
+- **README.md**：まずここを読む。課題の説明。
+- **scripts/test**：ステージごとのテスト実行を助けるスクリプト。
+  ```bash
+  ./scripts/test (ステージ番号)
+  # 例
+  ./scripts/test 1
+  ```
+  すべてのテストを一括実行するには：
+  ```bash
+  pytest
+  ```
+- **src/kadai/(演習用 Python ファイル)**：実装するコード本体。
+- **tests/stages/stage-XX/**：ステージごとのテスト群。
 
-## プログラム作成ガイド
+### 〇 課題によって重要になるファイル
+- **pytest.ini**：`pytest` の設定。必要に応じてマーカーを追加します。
 
-1. `src/kadai/` ディレクトリ内にPythonファイルを作成
-2. `src/kadai/__init__.py` で適切にインポートしているか確認
-3. テストを実行して動作確認
-4. 先のテスト結果が変わらないようにしながら、次の段階のテストに通るよう修正
+---
 
-## 提出方法
+## 困ったとき（FAQ / トラブルシューティング）
+- **コミットメッセージが空でエラー**：短い説明文を入れて再度コミット（例：`hello_world を実装`）。
+- **`ModuleNotFoundError` が出る**：`src/kadai/__init__.py` に追加した関数をエクスポートしているか確認。
+- **`permission denied` で `./scripts/test` が動かない**：
+  ```bash
+  bash ./scripts/test 1
+  # または（必要な場合のみ）
+  chmod +x scripts/test
+  ```
+- **前の状態に戻したい**：
+  1) **ソース管理 → 変更（の上）**にカーソル  
+  2) 右側の「…」→ **前回のコミットを元に戻す**  
+  3) 「…」→ 変更 → **すべての変更のステージング解除**  
+  4) 「…」→ 変更 → **すべての変更の破棄**
+- **単一テストだけ動かしたい**：
+  ```bash
+  ./scripts/test 2
+  # あるいは pytest で部分実行
+  pytest -k stage-02 -q
+  ```
 
-1. 変更を行ったファイルを全て `Ctrl + S` で保存しておく
-2. 左側の「ソース管理」タブ > コミットの下の「変更」にカーソルを合わせ、「すべての変更をステージ」を選択
-3. コミットの上に変更内容を簡単に記述する(空欄はエラーになる)
-4. コミット後、変更を同期を押下すると提出されます
+---
 
-## 自動採点の確認方法
+## 用語（最小限）
+- **リポジトリ**：課題のファイル置き場。
+- **ステージング**：提出**準備**として変更を選ぶこと。
+- **コミット**：選んだ変更を**記録**すること（保存）。
+- **変更を同期**：リモートへ送ること（＝提出）。
 
-課題リポジトリでは、課題の提出と同時に自動採点が行なわれます。
+---
 
-1. Github で自身の課題リポジトリを開く(`https://classroom.github.com/mito-ac-25class/[課題名]-[Githubアカウント名]`)
-2. Actions タブ内で最新の workflow runs を選択
-3. run-autograding-test > Autograding Reporter に、テストの通過状況と得点が記載されています。
+以上でガイドは完了です。チュートリアルを終えたら、提出チェックリストを確認して提出してください。
+
