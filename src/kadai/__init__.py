@@ -1,2 +1,1 @@
-# ここに課題プログラムを記述してみよう
-
+from .hello import hello_world
